@@ -7,7 +7,7 @@ services:
 
   # Nginx Service
   nginx:
-    image: nginx:1.19
+    image: nginx:1.19-alpine
     ports:
       - 88:80
     volumes:
