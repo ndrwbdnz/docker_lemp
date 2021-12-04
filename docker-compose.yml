@@ -1,0 +1,49 @@
+#https://tech.osteel.me/posts/docker-for-local-web-development-part-1-a-basic-lemp-stack
+
+version: '3.8'
+
+# Services
+services:
+
+  # Nginx Service
+  nginx:
+    image: nginx:1.19
+    ports:
+      - 88:80
+    volumes:
+      - ./src:/var/www/php
+      - ./.docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - php
+
+  # PHP Service
+  php:
+    build: ./.docker/php
+    working_dir: /var/www/php
+    volumes:
+      - ./src:/var/www/php
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  # MySQL Service
+  mysql:
+    image: mysql/mysql-server:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: demo
+    ports:
+      - 3307:3306
+    volumes:
+      - ./.docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - mysqldata:/var/lib/mysql
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
+      interval: 5s
+      retries: 10
+
+# Volumes
+volumes:
+
+  mysqldata:

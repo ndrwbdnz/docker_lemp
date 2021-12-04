@@ -1,0 +1,20 @@
+source:
+https://tech.osteel.me/posts/docker-for-local-web-development-part-1-a-basic-lemp-stack
+
+#start docker containers in the background
+docker-compose up -d
+
+#after updating docker-compose.yml, container or image, or service config (e.g. nginx)
+docker-compose restart
+
+#check all logs
+docker-compose logs -f
+
+#check logs of a specific service
+docker-compose logs nginx
+
+#stop docker
+docker-compose stop
+
+#stop and destroy containers (and volumnes)
+docker-compose down (-v)
